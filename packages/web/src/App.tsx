@@ -1,36 +1,35 @@
-import React, { useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import '@aws-amplify/ui-react/styles.css';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  PiList,
-  PiHouse,
   PiChatCircleText,
-  PiPencil,
-  PiNote,
   PiChatsCircle,
-  PiPenNib,
-  PiMagnifyingGlass,
-  PiTranslate,
-  PiImages,
-  PiSpeakerHighBold,
+  PiFlowArrow,
   PiGear,
   PiGlobe,
-  PiX,
-  PiRobot,
-  PiVideoCamera,
-  PiFlowArrow,
+  PiHouse,
+  PiImages,
+  PiList,
   PiMagicWand,
+  PiMagnifyingGlass,
+  PiNote,
+  PiPencil,
+  PiPenNib,
+  PiRobot,
+  PiSpeakerHighBold,
+  PiTranslate,
+  PiVideoCamera,
+  PiX,
 } from 'react-icons/pi';
-import { Outlet } from 'react-router-dom';
-import Drawer, { ItemProps } from './components/Drawer';
+import { Outlet, useLocation } from 'react-router-dom';
 import ButtonIcon from './components/ButtonIcon';
-import '@aws-amplify/ui-react/styles.css';
-import useDrawer from './hooks/useDrawer';
-import useChatList from './hooks/useChatList';
+import Drawer, { ItemProps } from './components/Drawer';
 import PopupInterUseCasesDemo from './components/PopupInterUseCasesDemo';
+import useChatList from './hooks/useChatList';
+import useDrawer from './hooks/useDrawer';
 import useInterUseCases from './hooks/useInterUseCases';
 import { MODELS } from './hooks/useModel';
-import useScreen from './hooks/useScreen';
 import { optimizePromptEnabled } from './hooks/useOptimizePrompt';
+import useScreen from './hooks/useScreen';
 
 const ragEnabled: boolean = import.meta.env.VITE_APP_RAG_ENABLED === 'true';
 const ragKnowledgeBaseEnabled: boolean =
@@ -69,37 +68,37 @@ const items: ItemProps[] = [
   },
   ragEnabled
     ? {
-        label: 'RAG チャット',
-        to: '/rag',
-        icon: <PiChatCircleText />,
-        display: 'usecase' as const,
-        sub: 'Amazon Kendra',
-      }
+      label: 'RAG チャット',
+      to: '/rag',
+      icon: <PiChatCircleText />,
+      display: 'usecase' as const,
+      sub: 'Amazon Kendra',
+    }
     : null,
   ragKnowledgeBaseEnabled
     ? {
-        label: 'RAG チャット',
-        to: '/rag-knowledge-base',
-        icon: <PiChatCircleText />,
-        display: 'usecase' as const,
-        sub: 'Knowledge Base',
-      }
+      label: 'RAG チャット',
+      to: '/rag-knowledge-base',
+      icon: <PiChatCircleText />,
+      display: 'usecase' as const,
+      sub: 'Knowledge Base',
+    }
     : null,
   agentEnabled
     ? {
-        label: 'Agent チャット',
-        to: '/agent',
-        icon: <PiRobot />,
-        display: 'usecase' as const,
-      }
+      label: 'Agent チャット',
+      to: '/agent',
+      icon: <PiRobot />,
+      display: 'usecase' as const,
+    }
     : null,
   promptFlowChatEnabled
     ? {
-        label: 'Prompt Flow チャット',
-        to: '/prompt-flow-chat',
-        icon: <PiFlowArrow />,
-        display: 'usecase' as const,
-      }
+      label: 'Prompt Flow チャット',
+      to: '/prompt-flow-chat',
+      icon: <PiFlowArrow />,
+      display: 'usecase' as const,
+    }
     : null,
   {
     label: '文章生成',
@@ -139,11 +138,11 @@ const items: ItemProps[] = [
   },
   multiModalEnabled
     ? {
-        label: '映像分析',
-        to: '/video',
-        icon: <PiVideoCamera />,
-        display: 'usecase' as const,
-      }
+      label: '映像分析',
+      to: '/video',
+      icon: <PiVideoCamera />,
+      display: 'usecase' as const,
+    }
     : null,
   {
     label: '音声認識',
@@ -153,19 +152,19 @@ const items: ItemProps[] = [
   },
   optimizePromptEnabled
     ? {
-        label: 'プロンプト最適化',
-        to: '/optimize',
-        icon: <PiMagicWand />,
-        display: 'tool' as const,
-      }
+      label: 'プロンプト最適化',
+      to: '/optimize',
+      icon: <PiMagicWand />,
+      display: 'tool' as const,
+    }
     : null,
   ragEnabled
     ? {
-        label: 'Kendra 検索',
-        to: '/kendra',
-        icon: <PiMagnifyingGlass />,
-        display: 'tool' as const,
-      }
+      label: 'Kendra 検索',
+      to: '/kendra',
+      icon: <PiMagnifyingGlass />,
+      display: 'tool' as const,
+    }
     : null,
 ].flatMap((i) => (i !== null ? [i] : []));
 
@@ -185,6 +184,7 @@ const App: React.FC = () => {
   const { isShow } = useInterUseCases();
   const { screen, notifyScreen, scrollTopAnchorRef, scrollBottomAnchorRef } =
     useScreen();
+  const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
 
   const label = useMemo(() => {
     const chatId = extractChatId(pathname);
@@ -228,9 +228,8 @@ const App: React.FC = () => {
         </header>
 
         <div
-          className={`fixed -left-64 top-0 z-50 transition-all lg:left-0 lg:z-0 ${
-            isOpenDrawer ? 'left-0' : '-left-64'
-          }`}>
+          className={`fixed -left-64 top-0 z-50 transition-all lg:left-0 lg:z-0 ${isOpenDrawer ? 'left-0' : '-left-64'
+            }`}>
           <Drawer items={items} />
         </div>
 
@@ -249,11 +248,41 @@ const App: React.FC = () => {
         <div className="text-aws-font-color lg:ml-64">
           {/* ユースケース間連携時に表示 */}
           {isShow && <PopupInterUseCasesDemo />}
+          {isShowNotification && (
+            <div
+              style={{
+                position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.5)",
+                zIndex: 1000, display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }} onClick={() => setIsShowNotification(false)}>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  width: "80vw",
+                  height: "80vh",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                通知
+              </div>
+            </div>)}
           <Outlet />
         </div>
         <div ref={scrollBottomAnchorRef}></div>
-      </main>
-    </div>
+      </main >
+      {/* 右下に固定されたボタン */}
+      <button
+        className="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg z-50"
+        onClick={() => {
+          // ボタンがクリックされたときの処理をここに追加
+          setIsShowNotification(prev => !prev);
+        }}
+      >
+        事務局からのお知らせ一覧
+      </button >
+    </div >
   );
 };
 
