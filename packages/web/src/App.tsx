@@ -28,6 +28,7 @@ import useChatList from './hooks/useChatList';
 import useDrawer from './hooks/useDrawer';
 import useInterUseCases from './hooks/useInterUseCases';
 import { MODELS } from './hooks/useModel';
+import { useNotifications } from './hooks/useNotifications';
 import { optimizePromptEnabled } from './hooks/useOptimizePrompt';
 import useScreen from './hooks/useScreen';
 
@@ -185,6 +186,20 @@ const App: React.FC = () => {
   const { screen, notifyScreen, scrollTopAnchorRef, scrollBottomAnchorRef } =
     useScreen();
   const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
+  const { data: notifications } = useNotifications();
+
+  useEffect(() => {
+    console.log("notifications: ", notifications);
+
+    if (notifications) {
+      const prevTimeStamp = localStorage.getItem("notificationTimeStamp");
+
+      if (!prevTimeStamp || notifications[0].created_at > prevTimeStamp) {
+        setIsShowNotification(true);
+        localStorage.setItem("notificationTimeStamp", notifications[0].created_at);
+      }
+    }
+  }, [notifications])
 
   const label = useMemo(() => {
     const chatId = extractChatId(pathname);
@@ -258,14 +273,41 @@ const App: React.FC = () => {
               }} onClick={() => setIsShowNotification(false)}>
               <div
                 style={{
+                  borderRadius: "10px",
                   backgroundColor: "white",
                   width: "80vw",
                   height: "80vh",
+                  padding: "20px",
                   display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
                 }}
               >
-                通知
+                <h2 style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  運営からのお知らせ
+                </h2>
+                <div className="grow overflow-y-auto">
+                  {notifications && (
+                    <div className="w-full max-w-2xl mx-auto">
+                      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
+                        <thead>
+                          <tr className="bg-blue-500 text-white sticky top-0">
+                            <th className="p-3 text-left font-bold">日時</th>
+                            <th className="p-3 text-left font-bold">内容</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {notifications.map((notification, index) => (
+                            <tr key={index} className="bg-white hover:bg-blue-50 transition-colors">
+                              <td className="p-3 border-b border-gray-200">{notification.created_at}</td>
+                              <td className="p-3 border-b border-gray-200">{notification.content}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>)}
           <Outlet />
