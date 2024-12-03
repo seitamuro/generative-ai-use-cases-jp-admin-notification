@@ -69,37 +69,37 @@ const items: ItemProps[] = [
   },
   ragEnabled
     ? {
-      label: 'RAG チャット',
-      to: '/rag',
-      icon: <PiChatCircleText />,
-      display: 'usecase' as const,
-      sub: 'Amazon Kendra',
-    }
+        label: 'RAG チャット',
+        to: '/rag',
+        icon: <PiChatCircleText />,
+        display: 'usecase' as const,
+        sub: 'Amazon Kendra',
+      }
     : null,
   ragKnowledgeBaseEnabled
     ? {
-      label: 'RAG チャット',
-      to: '/rag-knowledge-base',
-      icon: <PiChatCircleText />,
-      display: 'usecase' as const,
-      sub: 'Knowledge Base',
-    }
+        label: 'RAG チャット',
+        to: '/rag-knowledge-base',
+        icon: <PiChatCircleText />,
+        display: 'usecase' as const,
+        sub: 'Knowledge Base',
+      }
     : null,
   agentEnabled
     ? {
-      label: 'Agent チャット',
-      to: '/agent',
-      icon: <PiRobot />,
-      display: 'usecase' as const,
-    }
+        label: 'Agent チャット',
+        to: '/agent',
+        icon: <PiRobot />,
+        display: 'usecase' as const,
+      }
     : null,
   promptFlowChatEnabled
     ? {
-      label: 'Prompt Flow チャット',
-      to: '/prompt-flow-chat',
-      icon: <PiFlowArrow />,
-      display: 'usecase' as const,
-    }
+        label: 'Prompt Flow チャット',
+        to: '/prompt-flow-chat',
+        icon: <PiFlowArrow />,
+        display: 'usecase' as const,
+      }
     : null,
   {
     label: '文章生成',
@@ -139,11 +139,11 @@ const items: ItemProps[] = [
   },
   multiModalEnabled
     ? {
-      label: '映像分析',
-      to: '/video',
-      icon: <PiVideoCamera />,
-      display: 'usecase' as const,
-    }
+        label: '映像分析',
+        to: '/video',
+        icon: <PiVideoCamera />,
+        display: 'usecase' as const,
+      }
     : null,
   {
     label: '音声認識',
@@ -153,19 +153,19 @@ const items: ItemProps[] = [
   },
   optimizePromptEnabled
     ? {
-      label: 'プロンプト最適化',
-      to: '/optimize',
-      icon: <PiMagicWand />,
-      display: 'tool' as const,
-    }
+        label: 'プロンプト最適化',
+        to: '/optimize',
+        icon: <PiMagicWand />,
+        display: 'tool' as const,
+      }
     : null,
   ragEnabled
     ? {
-      label: 'Kendra 検索',
-      to: '/kendra',
-      icon: <PiMagnifyingGlass />,
-      display: 'tool' as const,
-    }
+        label: 'Kendra 検索',
+        to: '/kendra',
+        icon: <PiMagnifyingGlass />,
+        display: 'tool' as const,
+      }
     : null,
 ].flatMap((i) => (i !== null ? [i] : []));
 
@@ -189,17 +189,20 @@ const App: React.FC = () => {
   const { data: notifications } = useNotifications();
 
   useEffect(() => {
-    console.log("notifications: ", notifications);
+    console.log('notifications: ', notifications);
 
-    if (notifications) {
-      const prevTimeStamp = localStorage.getItem("notificationTimeStamp");
+    if (notifications && notifications.length > 0) {
+      const prevTimeStamp = localStorage.getItem('notificationTimeStamp');
 
       if (!prevTimeStamp || notifications[0].created_at > prevTimeStamp) {
         setIsShowNotification(true);
-        localStorage.setItem("notificationTimeStamp", notifications[0].created_at);
+        localStorage.setItem(
+          'notificationTimeStamp',
+          notifications[0].created_at
+        );
       }
     }
-  }, [notifications])
+  }, [notifications]);
 
   const label = useMemo(() => {
     const chatId = extractChatId(pathname);
@@ -243,8 +246,9 @@ const App: React.FC = () => {
         </header>
 
         <div
-          className={`fixed -left-64 top-0 z-50 transition-all lg:left-0 lg:z-0 ${isOpenDrawer ? 'left-0' : '-left-64'
-            }`}>
+          className={`fixed -left-64 top-0 z-50 transition-all lg:left-0 lg:z-0 ${
+            isOpenDrawer ? 'left-0' : '-left-64'
+          }`}>
           <Drawer items={items} />
         </div>
 
@@ -266,41 +270,53 @@ const App: React.FC = () => {
           {isShowNotification && (
             <div
               style={{
-                position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.5)",
-                zIndex: 1000, display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-              }} onClick={() => setIsShowNotification(false)}>
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 1000,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onClick={() => setIsShowNotification(false)}>
               <div
                 style={{
-                  borderRadius: "10px",
-                  backgroundColor: "white",
-                  width: "80vw",
-                  height: "80vh",
-                  padding: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <h2 style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  borderRadius: '10px',
+                  backgroundColor: 'white',
+                  width: '80vw',
+                  height: '80vh',
+                  padding: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}>
+                <h2 style={{ textAlign: 'center', fontSize: '1.5rem' }}>
                   運営からのお知らせ
                 </h2>
                 <div className="grow overflow-y-auto">
                   {notifications && (
-                    <div className="w-full max-w-2xl mx-auto">
-                      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
+                    <div className="mx-auto w-full max-w-2xl">
+                      <table className="w-full border-collapse overflow-hidden rounded-lg shadow-md">
                         <thead>
-                          <tr className="bg-blue-500 text-white sticky top-0">
+                          <tr className="sticky top-0 bg-blue-500 text-white">
                             <th className="p-3 text-left font-bold">日時</th>
                             <th className="p-3 text-left font-bold">内容</th>
                           </tr>
                         </thead>
                         <tbody>
                           {notifications.map((notification, index) => (
-                            <tr key={index} className="bg-white hover:bg-blue-50 transition-colors">
-                              <td className="p-3 border-b border-gray-200">{notification.created_at}</td>
-                              <td className="p-3 border-b border-gray-200">{notification.content}</td>
+                            <tr
+                              key={index}
+                              className="bg-white transition-colors hover:bg-blue-50">
+                              <td className="border-b border-gray-200 p-3">
+                                {notification.created_at}
+                              </td>
+                              <td className="border-b border-gray-200 p-3">
+                                {notification.content}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -309,22 +325,22 @@ const App: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>)}
+            </div>
+          )}
           <Outlet />
         </div>
         <div ref={scrollBottomAnchorRef}></div>
-      </main >
+      </main>
       {/* 右下に固定されたボタン */}
       <button
-        className="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg z-50"
+        className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-500 px-4 py-2 font-bold text-white shadow-lg hover:bg-blue-600"
         onClick={() => {
           // ボタンがクリックされたときの処理をここに追加
-          setIsShowNotification(prev => !prev);
-        }}
-      >
+          setIsShowNotification((prev) => !prev);
+        }}>
         事務局からのお知らせ一覧
-      </button >
-    </div >
+      </button>
+    </div>
   );
 };
 
