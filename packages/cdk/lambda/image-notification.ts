@@ -17,7 +17,7 @@ export const handler = async (
       KeyConditionExpression:
         'category = :partitionKey AND created_at <= :currentTime',
       ExpressionAttributeValues: {
-        ':partitionKey': 'article',
+        ':partitionKey': 'image',
         ':currentTime': currentTimestamp(), // 現在時刻以前のアイテム
       },
       ScanIndexForward: false,

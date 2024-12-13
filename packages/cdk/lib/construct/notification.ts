@@ -26,7 +26,6 @@ export class Notification extends Construct {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    // APIの実装
     const authorizer = new CognitoUserPoolsAuthorizer(this, 'Authorizer', {
       cognitoUserPools: [props.userPool],
     });
@@ -36,6 +35,8 @@ export class Notification extends Construct {
       authorizer,
     };
 
+    // APIの実装
+    // /nofitication
     const notificationFunction = new NodejsFunction(this, 'Notification', {
       entry: './lambda/notification.ts',
       handler: 'handler',
@@ -49,6 +50,26 @@ export class Notification extends Construct {
       .addMethod(
         'GET',
         new LambdaIntegration(notificationFunction),
+        commonAuthorizerProps
+      );
+
+    // /image-notification
+    const imageNotificationFunction = new NodejsFunction(
+      this,
+      'ImageNotification',
+      {
+        entry: './lambda/image-notification.ts',
+        handler: 'handler',
+        runtime: Runtime.NODEJS_20_X,
+        environment: { TABLE_NAME: table.tableName },
+      }
+    );
+    table.grantReadData(imageNotificationFunction);
+    props.api.root
+      .addResource('image-notification')
+      .addMethod(
+        'GET',
+        new LambdaIntegration(imageNotificationFunction),
         commonAuthorizerProps
       );
   }

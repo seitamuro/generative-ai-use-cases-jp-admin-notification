@@ -29,6 +29,7 @@ import useDrawer from './hooks/useDrawer';
 import useInterUseCases from './hooks/useInterUseCases';
 import { MODELS } from './hooks/useModel';
 import { useNotifications } from './hooks/useNotifications';
+import { useImageNotifications } from './hooks/useImageNotifications';
 import { optimizePromptEnabled } from './hooks/useOptimizePrompt';
 import useScreen from './hooks/useScreen';
 
@@ -186,6 +187,7 @@ const App: React.FC = () => {
     useScreen();
   const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
   const { data: notifications } = useNotifications();
+  const { data: imageNotifications } = useImageNotifications();
 
   useEffect(() => {
     console.log('notifications: ', notifications);
@@ -276,6 +278,23 @@ const App: React.FC = () => {
                 {notifications[0].content.toString()}
               </div>
             </>
+          )}
+          {imageNotifications && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
+              {imageNotifications.map((item) => (
+                <img
+                  src={item.image_url}
+                  style={{
+                    height: '300px',
+                  }}
+                />
+              ))}
+            </div>
           )}
           {/* ユースケース間連携時に表示 */}
           {isShow && <PopupInterUseCasesDemo />}
