@@ -5,16 +5,9 @@ import { APIGatewayAuthorizerEvent, APIGatewayProxyResult } from 'aws-lambda';
 const TABLE_NAME = process.env.TABLE_NAME!;
 
 export const currentTimestamp = (): string => {
-  const date = new Date(Date.now());
-  const year = String(date.getFullYear()).padStart(4, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hour = String(date.getHours()).padStart(2, '0');
-  const minute = String(date.getMinutes()).padStart(2, '0');
-  const second = String(date.getSeconds()).padStart(2, '0');
-
-  const timestamp = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-
+  const timestamp = new Date(Date.now()).toLocaleDateString('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+  });
   console.log('currentTimestamp: ', timestamp);
 
   return timestamp;

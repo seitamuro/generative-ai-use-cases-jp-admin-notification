@@ -264,6 +264,19 @@ const App: React.FC = () => {
           </ButtonIcon>
         </div>
         <div className="text-aws-font-color lg:ml-64">
+          {notifications && (
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  color: 'white',
+                  justifyContent: 'center',
+                  backgroundColor: 'gray',
+                }}>
+                {notifications[0].content.toString()}
+              </div>
+            </>
+          )}
           {/* ユースケース間連携時に表示 */}
           {isShow && <PopupInterUseCasesDemo />}
           {isShowNotification && (
