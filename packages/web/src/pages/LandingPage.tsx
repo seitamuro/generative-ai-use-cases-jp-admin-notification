@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CardDemo from '../components/CardDemo';
+import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import {
   PiChatCircleText,
@@ -34,6 +35,7 @@ import {
 } from '../@types/navigate';
 import queryString from 'query-string';
 import { MODELS } from '../hooks/useModel';
+import { useImageNotifications } from '../hooks/useImageNotifications';
 
 const ragEnabled: boolean = import.meta.env.VITE_APP_RAG_ENABLED === 'true';
 const ragKnowledgeBaseEnabled: boolean =
@@ -50,8 +52,27 @@ const getPromptFlows = () => {
 const promptFlows = getPromptFlows();
 const promptFlowChatEnabled: boolean = promptFlows.length > 0;
 
+const styles: Record<string, CSSProperties> = {
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    overflowX: 'auto',
+    whiteSpace: 'nowrap',
+  },
+  imageLink: {
+    height: '300px',
+    width: 'auto',
+    flexShrink: '0',
+  },
+  image: {
+    objectFit: 'contain',
+    height: '300px',
+  },
+};
+
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { data: imageNotifications } = useImageNotifications();
   const { setIsShow, init } = useInterUseCases();
 
   const demoChat = () => {
@@ -269,6 +290,15 @@ const LandingPage: React.FC = () => {
       <div className="bg-aws-squid-ink flex flex-col items-center justify-center px-3 py-5 text-xl font-semibold text-white lg:flex-row">
         <AwsIcon className="mr-5 size-20" />
         ではじめる生成 AI
+      </div>
+
+      <div style={styles.container}>
+        {imageNotifications &&
+          imageNotifications.map((item) => (
+            <Link to={item.url} style={styles.imageLink}>
+              <img style={styles.image} src={item.image_url} />
+            </Link>
+          ))}
       </div>
 
       <div className="mx-3 mb-6 mt-5 flex flex-col items-center justify-center text-xs lg:flex-row">
